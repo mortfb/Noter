@@ -49,6 +49,21 @@ public partial class MyForm : Form
         _editor.Clear(); //removes all text
         _currentFile = ""; //reset current file
     }
+
+    private void OpenFile()
+    {
+        OpenFileDialog ofd = new OpenFileDialog {Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"};
+
+        if (ofd.ShowDialog() == DialogResult.OK)
+        {
+            _currentFile = ofd.FileName;
+            _editor.Text = File.ReadAllText(_currentFile);
+        }
+        else
+        {
+            Console.WriteLine("Open File Dialog failed"); // this is just for me :)
+        }
+    }
     
     
 }
