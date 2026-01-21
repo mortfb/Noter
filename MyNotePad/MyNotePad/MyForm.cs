@@ -22,10 +22,16 @@ public partial class MyForm : Form
         FileMenuSetup(menuFiles);
         //add the filetab to the menu
         menu.Items.Add(menuFiles);
-
+        
+        //setting menu
         var menuSetting = new ToolStripMenuItem("Settings");
         SettingMenuSetup(menuSetting);
         menu.Items.Add(menuSetting);
+        
+        //edit menu
+        var menuEdit = new ToolStripMenuItem("Edit");
+        EditMenuSetup(menuEdit);
+        menu.Items.Add(menuEdit);
 
 
         MainMenuStrip = menu;
@@ -71,6 +77,42 @@ public partial class MyForm : Form
         menuSetting.DropDownItems.Add(menuChangeFonts);
         menuSetting.DropDownItems.Add(menuDarkMode);
 
+    }
+
+    private void EditMenuSetup(ToolStripMenuItem menuEdit)
+    {
+        var menuUndo = new ToolStripMenuItem("Undo", null, (_, _) => _editor.Undo());
+        var menuRedo = new ToolStripMenuItem("Redo", null, (_, _) => _editor.Redo());
+        menuUndo.ForeColor = Color.Red;
+        menuRedo.ForeColor = Color.Red;
+        menuEdit.DropDownItems.Add(menuRedo);
+        menuEdit.DropDownItems.Add(menuUndo);
+        
+
+
+        _editor.TextChanged += (_, _) =>
+        {
+            menuUndo.Enabled = _editor.CanUndo;
+            if (!_editor.CanUndo)
+            {
+                menuUndo.ForeColor = Color.Red;
+            }
+            else
+            {
+                menuUndo.ForeColor = Color.Black;
+            }
+
+            menuRedo.Enabled = _editor.CanRedo;
+            if (!_editor.CanRedo)
+            {
+                menuRedo.ForeColor = Color.Red;
+            }
+            else
+            {
+                menuRedo.ForeColor = Color.Black;
+            }
+
+        };
     }
     
 
