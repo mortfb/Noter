@@ -19,6 +19,26 @@ public partial class MyForm : Form
 
         var menu = new MenuStrip();
         var menuFiles = new ToolStripMenuItem("File");
+        FileMenuSetup(menuFiles);
+        //add the filetab to the menu
+        menu.Items.Add(menuFiles);
+
+        var menuSetting = new ToolStripMenuItem("Settings");
+        SettingMenuSetup(menuSetting);
+        menu.Items.Add(menuSetting);
+
+
+        MainMenuStrip = menu;
+        Controls.Add(_editor);
+        Controls.Add(menu);
+        //InitializeComponent();
+    }
+    /// <summary>
+    /// Sets up the File menu
+    /// </summary>
+    /// <param name="menuFiles">the File Menu</param>
+    private void FileMenuSetup(ToolStripMenuItem menuFiles)
+    {
         var menuNewFile = new ToolStripMenuItem("New File", null, NewFile);
         var menuOpenFile = new ToolStripMenuItem("Open", null, OpenFile);
         var menuSaveFile = new ToolStripMenuItem("Save", null, SaveFile);
@@ -31,14 +51,23 @@ public partial class MyForm : Form
         menuFiles.DropDownItems.Add(menuSaveFile);
         menuFiles.DropDownItems.Add(menuSaveAsItem);
         menuFiles.DropDownItems.Add(menuExit);
-
-        //add the filetab to the menu
-        menu.Items.Add(menuFiles);
-
-        Controls.Add(_editor);
-        Controls.Add(menu);
-        //InitializeComponent();
     }
+    
+    /// <summary>
+    /// Sets up the Settings menu
+    /// </summary>
+    /// <param name="menuSetting">The settings menu</param>
+    private void SettingMenuSetup(ToolStripMenuItem menuSetting)
+    {   
+        //Setting up dark mode
+        var menuDarkMode = new ToolStripMenuItem("Dark Mode");
+        menuDarkMode.CheckOnClick = true;
+        menuDarkMode.CheckedChanged += SetDarkMode;
+
+        menuSetting.DropDownItems.Add(menuDarkMode);
+
+    }
+    
 
     /// <summary>
     /// Creates a new File
@@ -110,5 +139,37 @@ public partial class MyForm : Form
             Console.WriteLine("Saving File Dialog failed");
         }
 
+    }
+    /// <summary>
+    /// Toggle darkmode
+    /// </summary>
+    /// <param name="sender">The checkbox</param>
+    /// <param name="ea"></param>
+    private void SetDarkMode(object? sender, EventArgs ea)
+    {
+        var dm = sender as ToolStripMenuItem;
+        if (dm != null && dm.Checked) //checks if the box in the dark mode item is checked
+        {
+            _editor.ForeColor = Color.White;
+            _editor.BackColor = Color.FromArgb(30, 30, 50);
+            _editor.SelectionBackColor = Color.Gray;
+
+            MainMenuStrip.BackColor = Color.FromArgb(45, 45, 45);
+            MainMenuStrip.ForeColor = Color.White;
+            
+            BackColor = Color.FromArgb(30, 30, 50);
+        }
+        else //if it is already in darkmode
+        {
+            _editor.BackColor = Color.White;
+            _editor.ForeColor = Color.Black;
+            _editor.SelectionColor = Color.Gray;
+            
+            MainMenuStrip.BackColor = Color.LightGray;
+            MainMenuStrip.ForeColor = Color.Black;
+
+            BackColor = Color.LightGray;
+            
+        }
     }
 }
