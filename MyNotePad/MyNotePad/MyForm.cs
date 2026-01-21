@@ -63,7 +63,12 @@ public partial class MyForm : Form
         var menuDarkMode = new ToolStripMenuItem("Dark Mode");
         menuDarkMode.CheckOnClick = true;
         menuDarkMode.CheckedChanged += SetDarkMode;
+        
+        //changing fonts
+        var menuChangeFonts = new ToolStripMenuItem("Change Font");
 
+        menuChangeFonts.Click += ChangeFont;
+        menuSetting.DropDownItems.Add(menuChangeFonts);
         menuSetting.DropDownItems.Add(menuDarkMode);
 
     }
@@ -152,7 +157,6 @@ public partial class MyForm : Form
         {
             _editor.ForeColor = Color.White;
             _editor.BackColor = Color.FromArgb(30, 30, 50);
-            _editor.SelectionBackColor = Color.Gray;
 
             MainMenuStrip.BackColor = Color.FromArgb(45, 45, 45);
             MainMenuStrip.ForeColor = Color.White;
@@ -163,13 +167,23 @@ public partial class MyForm : Form
         {
             _editor.BackColor = Color.White;
             _editor.ForeColor = Color.Black;
-            _editor.SelectionColor = Color.Gray;
             
             MainMenuStrip.BackColor = Color.LightGray;
             MainMenuStrip.ForeColor = Color.Black;
 
             BackColor = Color.LightGray;
             
+        }
+    }
+
+    private void ChangeFont(object? sender, EventArgs ea)
+    {
+        FontDialog fd = new FontDialog();
+        fd.Font = _editor.Font;
+
+        if (fd.ShowDialog() == DialogResult.OK)
+        {
+            _editor.Font = fd.Font;
         }
     }
 }
