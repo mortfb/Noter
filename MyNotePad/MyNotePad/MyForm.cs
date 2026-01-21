@@ -4,6 +4,7 @@ public partial class MyForm : Form
 {
     private RichTextBox _editor;
     private string _currentFile = "";
+
     public MyForm()
     {
         Text = "My Notepad";
@@ -23,17 +24,17 @@ public partial class MyForm : Form
         var menuSaveFile = new ToolStripMenuItem("Save", null, SaveFile);
         var menuSaveAsItem = new ToolStripMenuItem("Save As", null, SaveAsFile);
         var menuExit = new ToolStripMenuItem("Exit", null, (_, _) => Close());
-        
+
         //Add the options to the file tab
         menuFiles.DropDownItems.Add(menuNewFile);
         menuFiles.DropDownItems.Add(menuOpenFile);
         menuFiles.DropDownItems.Add(menuSaveFile);
         menuFiles.DropDownItems.Add(menuSaveAsItem);
         menuFiles.DropDownItems.Add(menuExit);
-        
+
         //add the filetab to the menu
         menu.Items.Add(menuFiles);
-        
+
         Controls.Add(_editor);
         Controls.Add(menu);
         //InitializeComponent();
@@ -50,9 +51,14 @@ public partial class MyForm : Form
         _currentFile = ""; //reset current file
     }
 
-    private void OpenFile()
+    /// <summary>
+    /// Open a File.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="ea"></param>
+    private void OpenFile(object sender, EventArgs ea)
     {
-        OpenFileDialog ofd = new OpenFileDialog {Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"};
+        OpenFileDialog ofd = new OpenFileDialog { Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*" };
 
         if (ofd.ShowDialog() == DialogResult.OK)
         {
@@ -64,6 +70,45 @@ public partial class MyForm : Form
             Console.WriteLine("Open File Dialog failed"); // this is just for me :)
         }
     }
+
+    /// <summary>
+    /// Saves a file.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="ea"></param>
+    private void SaveFile(object sender, EventArgs ea)
+    {
+        if (string.IsNullOrEmpty(_currentFile))
+        {
+            SaveAsFile(sender, ea);
+        }
+        else
+        {
+            File.WriteAllText(_currentFile, _editor.Text); //Overwrites what is already in the file
+        }
+    }
     
-    
+    /// <summary>
+    /// Saves a file in a certain format.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="ea"></param>
+    private void SaveAsFile(object sender, EventArgs ea)
+    {
+        SaveFileDialog sfd = new SaveFileDialog()
+        {
+            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        };
+
+        if (sfd.ShowDialog() == DialogResult.OK)
+        {
+            _currentFile = sfd.FileName;
+            File.WriteAllText(_currentFile, _editor.Text);
+        }
+        else
+        {
+            Console.WriteLine("Saving File Dialog failed");
+        }
+
+    }
 }
