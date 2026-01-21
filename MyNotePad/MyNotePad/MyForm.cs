@@ -38,4 +38,17 @@ public partial class MyForm : Form
         Controls.Add(menu);
         //InitializeComponent();
     }
+
+    /// <summary>
+    /// Creates a new File
+    /// </summary>
+    /// <param name="sender">sender</param>
+    /// <param name="ea">event handler</param>
+    private void NewFile(object sender, EventArgs ea)
+    {
+        _editor.Clear(); //removes all text
+        _currentFile = ""; //reset current file
+    }
+    
+    
 }
